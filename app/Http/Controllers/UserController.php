@@ -12,17 +12,6 @@ use App\Repositories\User\UserRepositoryInterface;
 
 class UserController extends Controller
 {
-    /**
-     * @param UserRepositoryInterface $userRepository
-     * @return object
-     */
-    public function index(UserRepositoryInterface $userRepository)
-    {
-//        $users = $userRepository->getAllUser();
-//        return new UserResource($users);
-        $a = $userRepository->test();
-    }
-
 
     /**
      * @param UserRepositoryInterface $userRepository
@@ -51,10 +40,9 @@ class UserController extends Controller
      * @param Request $request
      * @return object
      */
-    public function show(UserRepositoryInterface $userRepository, $value, Request $request)
+    public function show(UserRepositoryInterface $userRepository,$searchType, $value, Request $request)
     {
-        $requestType = $request->input('type');
-        $user = $userRepository->getUserByRequestType($requestType, $value, $request);
+        $user = $userRepository->getUserByRequestType($searchType, $value, $request);
 
         return new UserResource($user);
     }

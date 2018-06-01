@@ -17,29 +17,31 @@ class UserRepository implements UserRepositoryInterface
     {
         $user = User::where($requestType, $value)
             ->with('sender.acceptorUser', 'acceptor.senderUser')->first();
-        $friends = collect();
-        $user->sender->each(function ($sender) use ($friends) {
-            $friends->push($sender->acceptorUser);
-        });
-        $user->acceptor->each(function ($acceptor) use ($friends) {
-            $friends->push($acceptor->senderUser);
-        });
-        unset($user->sender, $user->acceptor);
-        $user->friends = $friends;
+        $this->addFriendsToUserInstance($user);
+
         return $user;
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Database\Eloquent\Model|mixed|null|object|static
+     */
     public function getUserFriendById($id)
     {
         $user = User::where('id', $id)->
         with('sender.acceptorUser', 'acceptor.senderUser', 'sender.acceptorUserSocialContact',
             'acceptor.senderUserSocialContact'
-            )
+        )
             ->first();
-        $this->addFriendsToUser($user);
+        $this->addFriendsToUserInstance($user);
+
         return $user;
     }
 
+    /**
+     * @param $request
+     * @return UserResource|mixed
+     */
     public function addUser($request)
     {
         $user = $request->isMethod('put') ? User::findOrFail($request->id) : new User;
@@ -48,16 +50,27 @@ class UserRepository implements UserRepositoryInterface
         $user->gender = $request->input('gender');
         $user->password = $request->input('password');
         $user->save();
+
         return new UserResource($user);
     }
 
+    /**
+     * @param $id
+     * @return UserResource|mixed
+     * @throws \Exception
+     */
     public function deleteUserById($id)
     {
         $user = User::findOrFail($id);
         $user->delete();
+
         return new UserResource($user);
     }
 
+    /**
+     * @param $request
+     * @return mixed|void
+     */
     public function validateUserSearchParameter($request)
     {
         $request->validate([
@@ -65,11 +78,14 @@ class UserRepository implements UserRepositoryInterface
         ]);
     }
 
-    public function addFriendsToUser($user)
+    /**
+     * @param $user
+     * @return mixed
+     */
+    private function addFriendsToUserInstance($user)
     {
         $friends = collect();
         $friends->friendsSocialContacts = collect();
-
         $user->sender->each(function ($sender) use ($friends) {
             $friends->push($sender->acceptorUser);
             $friends->friendsSocialContacts->push($sender->acceptorUserSocialContact);
@@ -78,10 +94,9 @@ class UserRepository implements UserRepositoryInterface
             $friends->push($acceptor->senderUser);
             $friends->friendsSocialContacts->push($acceptor->senderUserSocialContact);
         });
-
         unset($user->sender, $user->acceptor);
         $user->friends = $friends;
-        
+
         return $user;
     }
 }
