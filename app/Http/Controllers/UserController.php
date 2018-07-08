@@ -29,8 +29,7 @@ class UserController extends Controller
      */
     public function getUserFriends(UserRepositoryInterface $userRepository, $id){
         $friends = $userRepository->getUserFriendById($id);
-        return $friends;
-        //return new UserFriendResource($friends);
+        return new UserFriendResource($friends);
 
     }
 
