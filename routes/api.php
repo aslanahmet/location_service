@@ -18,7 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::prefix('users')->group(function () {
     Route::get('all', 'UserController@index');
-    Route::get('{value}', 'UserController@show');
+    Route::get('search/{searchType}/{value}', 'UserController@show');
     Route::get('friends/{id}', 'UserController@getUserFriends');
     Route::post('user', 'UserController@store');
 //update user
