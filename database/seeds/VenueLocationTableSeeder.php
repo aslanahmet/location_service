@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class FriendshipTableSeeder extends Seeder
+class VenueLocationTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +11,6 @@ class FriendshipTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Models\User\Friendship::class, 200)->create();
+        factory(App\Models\Venue\VenueLocation::class, 50)->create();
     }
 }

@@ -8,5 +8,5 @@ class SocialContact extends Model
 {
     protected $table = 'social_contact';
 
-    protected $hidden = ['id', 'created_at', 'updated_at'];
+    protected $hidden = ['id', 'created_at', 'updated_at', 'user_id'];
 }
