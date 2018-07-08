@@ -29,11 +29,9 @@ class UserRepository implements UserRepositoryInterface
     public function getUserFriendById($id)
     {
         $user = User::where('id', $id)->
-        with('sender.acceptorUser', 'acceptor.senderUser', 'sender.acceptorUserSocialContact',
-            'acceptor.senderUserSocialContact'
-        )
-            ->first();
-        $this->addFriendsToUserInstance($user);
+        with('sender.acceptorUser.socialContact', 'acceptor.senderUser.socialContact'
+        )->first();
+        //$this->addFriendsToUserInstance($user);
 
         return $user;
     }

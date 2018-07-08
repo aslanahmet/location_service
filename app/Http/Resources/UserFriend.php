@@ -16,7 +16,7 @@ class UserFriend extends JsonResource
     {
         return [
             'friends' => $this->friends,
-            'friendsSocialContact' => $this->friends->friendsSocialContacts
+//            'friendsSocialContact' => $this->friends->friendsSocialContacts
         ];
     }
 
